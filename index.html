@@ -485,20 +485,24 @@ let currentAnimal = null;
 // 배치 영역 — 배경 1024×768 기준
 // 빙판 위치: 수면선 y≈47%, 빙판들은 x 3~85%, y 27~47% 구간
 const ZONES = {
-  turtle: { xMin:60,  xMax:940, yMin:430, yMax:710, size:55 },
-  bear:   { xMin:30,  xMax:760, yMin:215, yMax:365, size:65 },
-  whale:  { xMin:80,  xMax:920, yMin:460, yMax:700, size:75 },
-  manta:  { xMin:50,  xMax:910, yMin:390, yMax:660, size:70 },
+  // 바다거북: 수중 (수면선 y≈50% 아래, 확실히 물속)
+  turtle: { xMin:100, xMax:950, yMin:480, yMax:740, size:55 },
+  // 북극곰: 빙판 위만 (수면선 위, 빙판 구역)
+  bear:   { xMin:30,  xMax:760, yMin:215, yMax:365, size:42 },
+  // 향유고래: 수중 깊은 곳
+  whale:  { xMin:100, xMax:920, yMin:500, yMax:740, size:72 },
+  // 만타가오리: 수중 중간
+  manta:  { xMin:80,  xMax:920, yMin:480, yMax:700, size:62 },
 };
 
 // 북극곰 전용: 빙판 3개 구역을 명시적으로 정의
 const BEAR_ICE_ZONES = [
-  // 좌측 큰 빙판 (x: 20~270, y: 295~385)
-  { xMin:20,  xMax:270, yMin:295, yMax:385 },
-  // 중앙 빙판 (x: 290~560, y: 255~360)
-  { xMin:290, xMax:560, yMin:255, yMax:360 },
-  // 우측 작은 빙판 (x: 580~790, y: 220~310)
-  { xMin:580, xMax:790, yMin:220, yMax:310 },
+  // 좌측 큰 빙판 (수면선 위)
+  { xMin:20,  xMax:250, yMin:300, yMax:390 },
+  // 중앙 빙판
+  { xMin:280, xMax:540, yMin:260, yMax:370 },
+  // 우측 빙판
+  { xMin:560, xMax:760, yMin:220, yMax:320 },
 ];
 const allPlaced = [];
 
