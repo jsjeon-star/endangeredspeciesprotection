@@ -429,11 +429,17 @@ const globalMessages = [];
 function renderGlobalFeed() {
   const feed = document.getElementById('globalFeed');
   if (!feed) return;
-  if (globalMessages.length === 0) {
+
+  // 현재 동물이 선택된 경우 해당 동물 메시지만, 아니면 전체
+  const msgs = currentAnimal
+    ? globalMessages.filter(m => m.key === currentAnimal.key)
+    : globalMessages;
+
+  if (msgs.length === 0) {
     feed.innerHTML = '<div style="font-size:11px;color:#88c0d8;text-align:center;padding:16px 0;">아직 응원 메시지가 없어요. 첫 번째 응원을 남겨주세요!</div>';
     return;
   }
-  const show = globalMessages.slice(0, 10);
+  const show = msgs.slice(0, 10);
   feed.innerHTML = show.map(m => `
     <div style="
       display:flex; gap:8px; align-items:flex-start;
