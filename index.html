@@ -49,7 +49,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Pretendard',
 .body { overflow:hidden; display:flex; flex-direction:column; }
 .cards-view {
   display:grid; grid-template-columns:repeat(4,1fr);
-  gap:12px; padding:8px 28px; flex:1;
+  gap:12px; padding:8px 80px; flex:1;
 }
 .card {
   border-radius:16px; overflow:hidden; position:relative;
@@ -774,7 +774,6 @@ function initFirebaseListeners() {
     .orderBy('timestamp', 'desc')
     .limit(50)
     .onSnapshot(snapshot => {
-      // 전체 피드 업데이트
       globalMessages.length = 0;
       snapshot.forEach(doc => {
         const d = doc.data();
@@ -787,43 +786,44 @@ function initFirebaseListeners() {
         });
       });
       renderGlobalFeed();
-
-      // 현재 열려있는 동물 패널 메시지 업데이트
-      if (currentAnimal) {
-        state[currentAnimal.key].messages = globalMessages
-          .filter(m => m.key === currentAnimal.key)
-          .map(m => m.text);
-        renderMsgList();
-      }
+      if (currentAnimal) renderMsgList();
     });
 
-  // 그림 실시간 수신
-  db.collection('drawings')
-    .orderBy('timestamp', 'desc')
-    .onSnapshot(snapshot => {
-      // state 초기화
-      Object.keys(state).forEach(k => { state[k].sprites = []; });
-      allPlaced.length = 0;
-
-      snapshot.forEach(doc => {
-        const d = doc.data();
-        const key = d.key;
-        if (!state[key]) return;
-        const zone = ZONES[key];
-        const pos = findPos(zone, key);
-        state[key].sprites.push({ src: d.src, pos, key });
-      });
-
-      updateCounters();
-      if (document.getElementById('page-ocean').classList.contains('active')) {
-        renderOcean();
-      }
-
-      // 팝업 열려있으면 썸네일 업데이트
-      if (document.getElementById('msgPopup').classList.contains('show')) {
-        // 자연스럽게 유지
-      }
+  // 리셋 시간 감지 후 그림 리스너 시작
+  db.collection('settings').doc('oceanReset')
+    .onSnapshot(doc => {
+      const resetAt = doc.exists && doc.data().resetAt ? doc.data().resetAt : null;
+      listenDrawings(resetAt);
     });
+}
+
+let drawingsUnsubscribe = null;
+function listenDrawings(resetAt) {
+  // 기존 리스너 해제
+  if (drawingsUnsubscribe) drawingsUnsubscribe();
+
+  let query = db.collection('drawings').orderBy('timestamp', 'desc');
+  // 리셋 시간이 있으면 그 이후 그림만
+  if (resetAt) query = query.where('timestamp', '>', resetAt);
+
+  drawingsUnsubscribe = query.onSnapshot(snapshot => {
+    Object.keys(state).forEach(k => { state[k].sprites = []; });
+    allPlaced.length = 0;
+
+    snapshot.forEach(doc => {
+      const d = doc.data();
+      const key = d.key;
+      if (!state[key]) return;
+      const zone = ZONES[key];
+      const pos = findPos(zone, key);
+      state[key].sprites.push({ src: d.src, pos, key });
+    });
+
+    updateCounters();
+    if (document.getElementById('page-ocean').classList.contains('active')) {
+      renderOcean();
+    }
+  });
 }
 
 function goHome() {
