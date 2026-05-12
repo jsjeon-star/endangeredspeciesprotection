@@ -797,8 +797,11 @@ function initFirebaseListeners() {
           time: d.timestamp ? new Date(d.timestamp.toDate()).toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'}) : ''
         });
       });
-      renderGlobalFeed();
-      if (currentAnimal) renderMsgList();
+      // 상세 패널이 열려있고 동물이 선택된 경우에만 업데이트
+      if (currentAnimal && document.getElementById('detailView').classList.contains('open')) {
+        renderGlobalFeed();
+        renderMsgList();
+      }
     });
 
   // 리셋 시간 감지 후 그림 리스너 시작
