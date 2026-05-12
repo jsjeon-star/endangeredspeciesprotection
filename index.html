@@ -49,7 +49,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Pretendard',
 .body { overflow:hidden; display:flex; flex-direction:column; }
 .cards-view {
   display:grid; grid-template-columns:repeat(4,1fr);
-  gap:14px; padding:14px 28px 0; flex:1;
+  gap:12px; padding:8px 28px; flex:1;
 }
 .card {
   border-radius:16px; overflow:hidden; position:relative;
@@ -251,7 +251,7 @@ input[type=file] { display:none; }
   <div class="app">
     <div class="header">
       <div class="hrow1">
-        <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;">
+        <div style="cursor:pointer;" onclick="goHome()">
           <div class="school-name">아트봉봉스쿨</div>
           <div class="school-sub">멸종 위기 동물 보호 캠페인</div>
         </div>
@@ -294,9 +294,9 @@ input[type=file] { display:none; }
     <div class="body">
       <div style="
         text-align:center; padding:10px 0 6px;
-        font-size:13px; font-weight:500;
-        color:rgba(220,240,255,0.88);
-        text-shadow:0 1px 6px rgba(0,0,0,0.4);
+        font-size:16px; font-weight:600;
+        color:rgba(220,240,255,0.92);
+        text-shadow:0 1px 8px rgba(0,0,0,0.45);
         letter-spacing:.3px; flex-shrink:0;
       ">멸종 위기 동물을 클릭, 그림을 업로드하고 응원 메시지를 남겨 주세요</div>
       <div class="cards-view" id="cardsView">
@@ -824,6 +824,13 @@ function initFirebaseListeners() {
         // 자연스럽게 유지
       }
     });
+}
+
+function goHome() {
+  // 상세 패널이 열려있으면 닫기
+  if (currentAnimal) closeDetail();
+  // 우리가 만드는 바다 페이지면 돌아가기
+  if (document.getElementById('page-ocean').classList.contains('active')) goBack();
 }
 
 renderCards();
