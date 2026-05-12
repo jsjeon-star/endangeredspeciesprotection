@@ -212,11 +212,11 @@ body { font-family:'Pretendard',sans-serif; background:#0f1923; color:#e0e8f0; m
     <button class="tab-btn" onclick="switchTab('gallery', this)">🎨 그림 갤러리</button>
   </div>
 
-  <!-- 내보내기 버튼 -->
-  <div class="export-row">
+    <div class="export-row">
     <button class="export-btn" onclick="exportMessages()">📥 메시지 CSV 다운로드</button>
     <button class="export-btn" onclick="exportDrawings()">📥 그림 목록 CSV 다운로드</button>
     <button class="export-btn" onclick="exportSummary()">📥 요약 통계 CSV 다운로드</button>
+    <button class="export-btn" onclick="resetOcean()" style="background:rgba(220,50,50,0.15);border-color:rgba(220,50,50,0.4);color:#ff9090;margin-left:auto;">🌊 바다 화면 리셋</button>
   </div>
 
   <!-- 메시지 섹션 -->
@@ -409,6 +409,21 @@ function closeLightbox() {
 
 // ── CSV 내보내기
 const BOM = '\uFEFF';
+// ── 바다 화면 리셋 (데이터는 유지, 표시만 초기화)
+async function resetOcean() {
+  if (!confirm('바다 화면을 리셋할까요?\n\n그림·메시지 데이터는 그대로 유지되고\n바다 화면에서만 모든 동물이 사라집니다.')) return;
+
+  try {
+    await db.collection('settings').doc('oceanReset').set({
+      resetAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    alert('✅ 바다 화면이 리셋됐습니다!\n\n갤러리·메시지 데이터는 그대로입니다.');
+  } catch(e) {
+    console.error(e);
+    alert('리셋 실패: ' + e.message);
+  }
+}
+
 function downloadCsv(content, filename) {
   const blob = new Blob([content], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
