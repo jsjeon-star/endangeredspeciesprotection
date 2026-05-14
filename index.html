@@ -49,20 +49,22 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Pretendard',
 .body { overflow:hidden; display:flex; flex-direction:column; min-height:0; }
 .cards-view {
   display:grid; grid-template-columns:repeat(4,1fr);
-  gap:10px; padding:4px 80px; flex:1; overflow:hidden;
+  gap:10px; padding:4px 3vw; flex:1; overflow:hidden;
+  align-items:stretch;
 }
 .card {
   border-radius:16px; overflow:hidden; position:relative;
   cursor:pointer; transition:transform .25s, box-shadow .25s;
-  box-shadow:0 8px 28px rgba(0,0,0,0.4); height:100%;
+  box-shadow:0 8px 28px rgba(0,0,0,0.4);
+  aspect-ratio: 2/3; max-height:100%; width:100%;
 }
 .card:hover { transform:translateY(-5px); box-shadow:0 14px 36px rgba(0,0,0,0.5); }
 .card.active { outline:3px solid rgba(100,200,255,0.9); transform:translateY(-5px); }
 .card-img { width:100%; height:100%; object-fit:cover; object-position:center 20%; display:block; position:absolute; inset:0; }
 .card-overlay { position:absolute; inset:0; background:linear-gradient(180deg,transparent 55%,rgba(0,10,40,0.92) 100%); z-index:1; }
 .card-content { position:absolute; bottom:0; left:0; right:0; z-index:2; padding:10px 12px 14px; }
-.card-name   { font-size:17px; font-weight:700; color:#fff; margin-bottom:4px; line-height:1.2; }
-.card-desc   { font-size:9px; color:rgba(200,235,255,0.85); line-height:1.55; }
+.card-name   { font-size:clamp(13px,1.5vw,17px); font-weight:700; color:#fff; margin-bottom:4px; line-height:1.2; }
+.card-desc   { font-size:clamp(8px,0.9vw,9px); color:rgba(200,235,255,0.85); line-height:1.55; }
 .card-status { display:inline-block; margin-top:5px; font-size:8.5px; font-weight:700; padding:2px 7px; border-radius:9px; }
 .en { background:rgba(220,130,0,.3); color:#ffc060; border:1px solid rgba(220,130,0,.4); }
 .vu { background:rgba(30,160,220,.25); color:#80d8ff; border:1px solid rgba(30,160,220,.35); }
@@ -204,7 +206,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Pretendard',
   background:rgba(255,255,255,0.97);
   border-radius:14px; padding:14px 16px;
   box-shadow:0 8px 32px rgba(0,0,0,0.35);
-  min-width:280px; max-width:340px;
+  min-width:320px; max-width:400px;
   pointer-events:all;
   display:none;
 }
@@ -212,19 +214,19 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Pretendard',
 .popup-animal { display:none; }
 /* 팝업 내부: 썸네일 + 메시지 좌우 배치 */
 .popup-body {
-  display:flex; gap:10px; align-items:flex-start;
+  display:flex; gap:12px; align-items:flex-start;
 }
 .popup-thumbs {
-  display:grid; grid-template-columns:repeat(2,1fr); gap:5px;
-  flex-shrink:0; width:100px;
+  display:grid; grid-template-columns:repeat(2,1fr); gap:6px;
+  flex-shrink:0; width:140px;
 }
 .popup-thumb {
-  width:100%; aspect-ratio:1; border-radius:7px; overflow:hidden;
+  width:100%; aspect-ratio:1; border-radius:9px; overflow:hidden;
   border:1.5px solid rgba(0,144,208,0.2);
 }
 .popup-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
 .popup-thumb-empty { font-size:10px; color:#88c0d8; text-align:center; padding:8px 0; grid-column:1/-1; }
-.popup-msgs { flex:1; max-height:120px; overflow-y:auto; display:flex; flex-direction:column; gap:6px; }
+.popup-msgs { flex:1; max-height:140px; overflow-y:auto; display:flex; flex-direction:column; gap:6px; }
 .popup-msgs::-webkit-scrollbar { width:3px; }
 .popup-msgs::-webkit-scrollbar-thumb { background:rgba(0,144,208,.3); border-radius:2px; }
 .popup-msg { background:#edf7fc; border-radius:8px; padding:7px 10px; font-size:11px; color:#1a4a6a; line-height:1.5; }
@@ -305,14 +307,14 @@ input[type=file] { display:none; }
       ">멸종 위기 동물을 클릭, 그림을 업로드하고 응원 메시지를 남겨 주세요</div>
 
       <!-- 우리가 만드는 바다 버튼: 카드 위 꽉차게 -->
-      <div style="padding:6px 80px 6px; flex-shrink:0;">
+      <div style="padding:6px 3vw 6px; flex-shrink:0;">
         <button onclick="goToOcean()" style="
-          width:100%; padding:15px 0;
+          width:100%; padding:clamp(10px,1.5vh,16px) 0;
           background:linear-gradient(135deg,#0070b8,#00b4e8);
           border:1px solid rgba(100,200,255,0.4);
           border-radius:10px; cursor:pointer;
           color:#fff; font-family:'Pretendard',sans-serif;
-          font-size:17px; font-weight:700;
+          font-size:clamp(14px,1.8vw,18px); font-weight:700;
           box-shadow:0 3px 14px rgba(0,100,180,0.35);
           transition:transform .2s, box-shadow .2s;
           display:flex; align-items:center; justify-content:center; gap:8px;
@@ -503,14 +505,14 @@ let currentAnimal = null;
 // 배치 영역 — 배경 1024×768 기준
 // 빙판 위치: 수면선 y≈47%, 빙판들은 x 3~85%, y 27~47% 구간
 const ZONES = {
-  // 바다거북: 빙하판(y10~44%) + 수중(y50~85%)
-  turtle: { xMin:60, xMax:960, yMin:77,  yMax:650, size:52 },
-  // 북극곰: 빙하판 위만 (y8~44%)
-  bear:   { xMin:40, xMax:960, yMin:60,  yMax:340, size:42 },
-  // 향유고래: 수중만 (y50~88%)
-  whale:  { xMin:60, xMax:960, yMin:385, yMax:675, size:72 },
-  // 만타가오리: 수중만 (y48~82%)
-  manta:  { xMin:60, xMax:960, yMin:370, yMax:630, size:62 },
+  // 바다거북: 빙하판(y15~42%) + 수중 중간(y52~78%)
+  turtle: { xMin:60, xMax:960, yMin:115, yMax:600, size:52 },
+  // 북극곰: 빙하판 위만 (y8~42%)
+  bear:   { xMin:40, xMax:960, yMin:60,  yMax:320, size:42 },
+  // 향유고래: 수중 중간(y50~80%)
+  whale:  { xMin:60, xMax:900, yMin:385, yMax:615, size:72 },
+  // 만타가오리: 수중(y48~78%)
+  manta:  { xMin:60, xMax:900, yMin:370, yMax:600, size:62 },
 };
 
 // 북극곰 전용: 빙판 3개 구역을 명시적으로 정의
