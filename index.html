@@ -7,10 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-html, body { width:100%; height:100%; overflow:hidden; font-family:'Pretendard',sans-serif; }
+html, body { width:100%; height:100%; overflow:hidden; font-family:'Pretendard',sans-serif; position:relative; }
 
 /* ══ PAGES ══ */
-.page { position:absolute; inset:0; width:100%; height:100%; overflow:hidden; display:none; }
+.page { position:fixed; inset:0; width:100%; height:100%; overflow:hidden; display:none; }
 .page.active { display:block; }
 
 /* ══ PAGE 1 ══ */
@@ -46,10 +46,10 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Pretendard',
 .slogan-sub  { font-size:11px; font-style:italic; color:rgba(180,220,255,0.85); margin-top:3px; }
 
 /* CARDS */
-.body { overflow:hidden; display:flex; flex-direction:column; }
+.body { overflow:hidden; display:flex; flex-direction:column; min-height:0; }
 .cards-view {
   display:grid; grid-template-columns:repeat(4,1fr);
-  gap:10px; padding:4px 80px; flex:1;
+  gap:10px; padding:4px 80px; flex:1; overflow:hidden;
 }
 .card {
   border-radius:16px; overflow:hidden; position:relative;
@@ -58,8 +58,8 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Pretendard',
 }
 .card:hover { transform:translateY(-5px); box-shadow:0 14px 36px rgba(0,0,0,0.5); }
 .card.active { outline:3px solid rgba(100,200,255,0.9); transform:translateY(-5px); }
-.card-img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; position:absolute; inset:0; }
-.card-overlay { position:absolute; inset:0; background:linear-gradient(180deg,transparent 40%,rgba(0,10,40,0.92) 100%); z-index:1; }
+.card-img { width:100%; height:100%; object-fit:cover; object-position:center 20%; display:block; position:absolute; inset:0; }
+.card-overlay { position:absolute; inset:0; background:linear-gradient(180deg,transparent 55%,rgba(0,10,40,0.92) 100%); z-index:1; }
 .card-content { position:absolute; bottom:0; left:0; right:0; z-index:2; padding:10px 12px 14px; }
 .card-name   { font-size:17px; font-weight:700; color:#fff; margin-bottom:4px; line-height:1.2; }
 .card-desc   { font-size:9px; color:rgba(200,235,255,0.85); line-height:1.55; }
@@ -68,7 +68,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Pretendard',
 .vu { background:rgba(30,160,220,.25); color:#80d8ff; border:1px solid rgba(30,160,220,.35); }
 
 /* DETAIL VIEW */
-.detail-view { display:none; grid-template-columns:1fr 3fr; gap:14px; padding:18px 28px; height:100%; }
+.detail-view { display:none; grid-template-columns:1fr 3fr; gap:14px; padding:18px 28px; min-height:0; flex:1; }
 .detail-view.open { display:grid; }
 .card-thumb {
   border-radius:16px; overflow:hidden; position:relative;
@@ -307,12 +307,12 @@ input[type=file] { display:none; }
       <!-- 우리가 만드는 바다 버튼: 카드 위 꽉차게 -->
       <div style="padding:6px 80px 6px; flex-shrink:0;">
         <button onclick="goToOcean()" style="
-          width:100%; padding:11px 0;
+          width:100%; padding:15px 0;
           background:linear-gradient(135deg,#0070b8,#00b4e8);
           border:1px solid rgba(100,200,255,0.4);
           border-radius:10px; cursor:pointer;
           color:#fff; font-family:'Pretendard',sans-serif;
-          font-size:14px; font-weight:700;
+          font-size:17px; font-weight:700;
           box-shadow:0 3px 14px rgba(0,100,180,0.35);
           transition:transform .2s, box-shadow .2s;
           display:flex; align-items:center; justify-content:center; gap:8px;
@@ -322,7 +322,7 @@ input[type=file] { display:none; }
         </button>
       </div>
 
-      <div class="cards-view" id="cardsView">
+      <div class="cards-view" id="cardsView"></div>
       <div class="detail-view" id="detailView">
         <div class="card-thumb">
           <img id="thumbImg" src="" alt="">
